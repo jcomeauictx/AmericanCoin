@@ -1,0 +1,146 @@
+@font-face {font-family: 'Myriad Pro'; src: url('../fonts/MyriadPro-Cond.eot');}
+@font-face {font-family: 'Adobe Garamond Pro'; src: url('../fonts/agaramondpro-regular-webfont.eot');}
+@font-face {font-family: 'Myriad Pro'; src: url('../fonts/MyriadPro-Cond.otf');}
+@font-face {font-family: 'Adobe Garamond Pro'; src: url('../fonts/AGaramondPro-Regular.otf');}
+
+
+body {
+	
+	background: url(../images/americoin-bk.jpg) center center no-repeat #000;}
+	
+h3 {
+	
+	font-family:Arial, Helvetica, sans-serif;
+	color:#FFF; }
+	
+h1 {
+	
+	font-family: 'Prata', serif; 
+	font-size:40px; }
+	
+h2 {
+	
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:28px;
+	color: #FC0; }
+	
+h4 {
+	
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:18px;
+	color:#FFF; }
+	
+	
+p {
+	
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px; }
+	
+	
+/* -------------- BEGIN COUNTER ---------------------*/
+
+#countbox{
+	padding-top: 20px;
+	color: #fff;
+	font-family: Myriad Pro,Helvetica,sans-serif;
+	font-size: 70px;
+	width: 432px;
+	height: 200px;
+	margin-left:auto;
+	margin-right: auto;
+}
+
+#days{
+	float: left;
+	text-align: center;	
+	background-image:url('../img/flip.png');
+	background-repeat:no-repeat;
+	margin: 0 7px 0 7px;
+	height: 89px;
+	width: 94px;
+	z-index:1;
+}
+
+		#days_text{
+			background-image:url('../img/days_text.jpg');
+			background-position: center;
+			background-repeat:no-repeat;
+			position: absolute;
+			margin-top: 30px;
+			height: 26px;
+			width: 94px;
+		}
+	
+#hours{	
+	float: left;
+	text-align: center;
+	background-image:url('../img/flip.png');
+	background-repeat:no-repeat;
+	margin: 0 7px 0 7px;
+	height: 89px;
+	width: 94px;
+	z-index:1;
+}
+
+		#hours_text{
+			background-image:url('../img/hours_text.jpg');
+			background-position: center;
+			background-repeat:no-repeat;
+			position: absolute;
+			margin-top: 30px;
+			height: 26px;
+			width: 94px;
+		}
+
+#mins{
+	float: left;
+	text-align: center;
+	background-image:url('../img/flip.png');
+	background-repeat:no-repeat;
+	margin: 0 7px 0 7px;
+	height: 89px;
+	width: 94px;
+    z-index:1;
+}
+
+		#mins_text{
+			background-image:url('../img/mins_text.jpg');
+			background-position: center;
+			background-repeat:no-repeat;
+			position: absolute;
+			margin-top: 30px;
+			height: 26px;
+			width: 94px;
+		}
+
+#secs{
+	float: left;
+	text-align: center;
+	background-image:url('../img/flip.png');
+	background-repeat:no-repeat;
+	margin: 0 7px 0 7px;
+	height: 89px;
+	width: 94px;
+    z-index:1;
+}
+
+		#secs_text{
+			background-image:url('../img/secs_text.jpg');
+			background-position: center;
+			background-repeat:no-repeat;
+			position: absolute;
+			margin-top: 30px;
+			height: 26px;
+			width: 94px;
+		}
+
+#days span, #hours span, #mins span , #secs span {
+	background: url(../img/flip_gradient.png);
+	background-repeat:no-repeat;
+	position: absolute;
+	display: block;
+	height: 57px;
+	width: 94px;
+}
+
+/* -------------- END COUNTER ---------------------*/
