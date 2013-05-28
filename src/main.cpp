@@ -2071,7 +2071,7 @@ bool LoadBlockIndex(bool fAllowNew)
 			std::cout << "\n";
         }
 
-        block.print();
+        //block.print();
         assert(block.GetHash() == hashGenesisBlock);
 
         // Start new block file
