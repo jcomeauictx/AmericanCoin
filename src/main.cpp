@@ -29,7 +29,7 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0xe235425c8314df2f26b94d89fd5582edc74d80cf39d105107ea6cd12d8898491");
+uint256 hashGenesisBlock("0x84409e2b69534476cfd1cecf030848abe98db872843498f179d755c627ce9a87");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Americancoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -832,7 +832,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
 
     nSubsidy >>= (nHeight / 840000);
 	
-	if( nHeight < 14000 ) // no block reward while miners prep for release
+	if( nHeight > 6500 && nHeight < 14000 ) // no block reward while miners prep for release
 		nSubsidy = 0;
 
     return nSubsidy + nFees;
@@ -1328,10 +1328,12 @@ bool CBlock::DisconnectBlock(CTxDB& txdb, CBlockIndex* pindex)
 
 bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex)
 {
+	printf( "Trying to connect block...\n" );
     // Check it again in case a previous version let a bad block in
     if (!CheckBlock())
         return false;
 
+	printf( "Alright, so we passed the !CheckBlock() function. now what?\n" );
     // Do not allow blocks that contain transactions which 'overwrite' older transactions,
     // unless those are already completely spent.
     // If such overwrites are allowed, coinbases and transactions depending upon those
@@ -1399,17 +1401,16 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex)
 
         mapQueuedChanges[hashTx] = CTxIndex(posThisTx, tx.vout.size());
     }
-
     // Write queued txindex changes
     for (map<uint256, CTxIndex>::iterator mi = mapQueuedChanges.begin(); mi != mapQueuedChanges.end(); ++mi)
     {
         if (!txdb.UpdateTxIndex((*mi).first, (*mi).second))
             return error("ConnectBlock() : UpdateTxIndex failed");
     }
-
     if (vtx[0].GetValueOut() > GetBlockValue(pindex->nHeight, nFees))
         return false;
 
+	printf( "k, we made it to checkpoint beta\n" );
     // Update block index on disk without changing it in memory.
     // The memory index structure will be changed after the db commits.
     if (pindex->pprev)
@@ -1534,6 +1535,7 @@ bool CBlock::SetBestChainInner(CTxDB& txdb, CBlockIndex *pindexNew)
     {
         txdb.TxnAbort();
         InvalidChainFound(pindexNew);
+		  
         return false;
     }
     if (!txdb.TxnCommit())
@@ -2001,7 +2003,7 @@ bool LoadBlockIndex(bool fAllowNew)
 		  
 
         // Genesis block
-        const char* pszTimestamp = "The Times 24/May/2013 Beijing Plans to Reduce the State's Role in the Economy";
+        const char* pszTimestamp = "The Times 28/May/2013 Obama Plans 3 Nominations for Key Court";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -2013,26 +2015,29 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1369453032;
+        block.nTime    = 1369760071;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 3053716;
+        block.nNonce   = 109478;
 
         if (fTestNet)
         {
             block.nTime    = 1369453032;
-            block.nNonce   = 0;
+            block.nNonce   = 109478;
         }
 
-        //// debug print
-		//std::cout << "Hopefully making a new block...\n";
-        //std::cout << block.GetHash().ToString().c_str();
-		//std::cout << "\n";
-        //std::cout << hashGenesisBlock.ToString().c_str();
-		//std::cout << "\n";
-        //std::cout << block.hashMerkleRoot.ToString().c_str();
-		//std::cout << "\n";
+		if( false )
+		{
+			//// debug print
+			std::cout << "Hopefully making a new block...\n";
+			std::cout << block.GetHash().ToString().c_str();
+			std::cout << "\n";
+			std::cout << hashGenesisBlock.ToString().c_str();
+			std::cout << "\n";
+			std::cout << block.hashMerkleRoot.ToString().c_str();
+			std::cout << "\n";
+		}
 		
-        assert(block.hashMerkleRoot == uint256("0x710d90c1a888ee1a338591fa1c184f259b16af584a64e77ada2a55d816eedfd0"));
+        assert(block.hashMerkleRoot == uint256("0xe9a0047d082da09fda981cbbc7e32822b7ff8faa575564983c62d07059a9587f"));
 
         // If genesis block hash does not match, then generate new genesis hash.
         if (false && block.GetHash() != hashGenesisBlock)
@@ -2071,7 +2076,7 @@ bool LoadBlockIndex(bool fAllowNew)
 			std::cout << "\n";
         }
 
-        //block.print();
+        block.print();
         assert(block.GetHash() == hashGenesisBlock);
 
         // Start new block file
