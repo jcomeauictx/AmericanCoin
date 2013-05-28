@@ -1991,6 +1991,14 @@ bool LoadBlockIndex(bool fAllowNew)
     {
         if (!fAllowNew)
             return false;
+		
+		// Genesis Block:
+		//CBlock(hash=e235425c8314df2f26b9, PoW=000000758e8a0bbf2498, ver=1, hashPrevBlock=00000000000000000000, hashMerkleRoot=710d90c1a8, nTime=1369453032, nBits=1e0ffff0, nNonce=3053716, vtx=1)
+		//  CTransaction(hash=710d90c1a8, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+		//	CTxIn(COutPoint(0000000000, -1), coinbase 04ffff001d01044c4d5468652054696d65732032342f4d61792f32303133204265696a696e6720506c616e7320746f2052656475636520746865205374617465277320526f6c6520696e207468652045636f6e6f6d79)
+		//	CTxOut(nValue=100.00000000, scriptPubKey=4104678afdb0fe5548261967f1a671)
+		//  vMerkleTree: 710d90c1a8
+		  
 
         // Genesis block
         const char* pszTimestamp = "The Times 24/May/2013 Beijing Plans to Reduce the State's Role in the Economy";
