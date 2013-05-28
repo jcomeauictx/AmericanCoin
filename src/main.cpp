@@ -2016,13 +2016,13 @@ bool LoadBlockIndex(bool fAllowNew)
         }
 
         //// debug print
-		std::cout << "Hopefully making a new block...\n";
-        std::cout << block.GetHash().ToString().c_str();
-		std::cout << "\n";
-        std::cout << hashGenesisBlock.ToString().c_str();
-		std::cout << "\n";
-        std::cout << block.hashMerkleRoot.ToString().c_str();
-		std::cout << "\n";
+		//std::cout << "Hopefully making a new block...\n";
+        //std::cout << block.GetHash().ToString().c_str();
+		//std::cout << "\n";
+        //std::cout << hashGenesisBlock.ToString().c_str();
+		//std::cout << "\n";
+        //std::cout << block.hashMerkleRoot.ToString().c_str();
+		//std::cout << "\n";
 		
         assert(block.hashMerkleRoot == uint256("0x710d90c1a888ee1a338591fa1c184f259b16af584a64e77ada2a55d816eedfd0"));
 
