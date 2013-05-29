@@ -27,18 +27,23 @@ $.noConflict();
 <body>
 <script>
 jQuery(document).ready( function() {
+	
+	(function(){
+		
+		jQuery.ajax({
+			dataType: "json",
+			url: 'http://node1.amccoin.com/api.php',
+			success: function (data) {
+				
+				jQuery('#blocks_left').html( 14000 - data.blocks );
+				
+			}
+		});
+		
+		setTimeout(arguments.callee, 10000);
+	})();
 
-	jQuery.ajax({
-		dataType: "json",
-		url: 'http://node1.amccoin.com/api.php',
-		success: function (data) {
-			
-			jQuery('#blocks_left').html( 14000 - data.blocks );
-			
-			console.log( data );
-			
-		}
-	});
+	
 
 } );
 
