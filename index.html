@@ -32,7 +32,7 @@ jQuery(document).ready( function() {
 		
 		jQuery.ajax({
 			dataType: "json",
-			url: 'http://node1.amccoin.com/api.php',
+			url: 'http://pool.amccoin.com/api.php',
 			success: function (data) {
 				
 				jQuery('#blocks_left').html( 14000 - data.blocks );
