@@ -13,12 +13,11 @@ a lite version of Bitcoin optimized for CPU mining using scrypt as a proof of wo
 <li>subsidy halves in 840k blocks (~4 years)</li>
 <li>~168 million total coins</li>
 <li>100 coins per block</li>
+<li>504 blocks to retarget difficulty</li>
+<li>41.4% maximum change on difficulty retarget</li>
 </ul>
 
 The rest is the same as bitcoin.
-<ul>
-<li>2016 blocks to retarget difficulty</li>
-</ul>
 
 Development process
 =========

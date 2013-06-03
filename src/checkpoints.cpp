@@ -28,7 +28,10 @@ namespace Checkpoints
             boost::assign::map_list_of
             (     0, uint256("0xe235425c8314df2f26b94d89fd5582edc74d80cf39d105107ea6cd12d8898491"))
             (     9000, uint256("0x6aaddca66be07c4df9c5bb14ec5a46edfa13b0e208187b1275744e4354339a8b"))			
-            (     12150, uint256("0x91f24da86e5aaf6cfcf146e62d6b6cdc63e1b1ce699f776399e311d707cc1aa6"))
+            (     12150, uint256("0x91f24da86e5aaf6cfcf146e62d6b6cdc63e1b1ce699f776399e311d707cc1aa6"))		
+            (     13550, uint256("0x0c50d43e4982187e704c8c9d2b33d2617aed69ee471dffb744e58414c961cb11"))
+			
+
             ;
 
 
