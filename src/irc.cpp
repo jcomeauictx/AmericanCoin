@@ -301,8 +301,8 @@ void ThreadIRCSeed2(void* parg)
             // randomly join #americancoin00-#americancoin99
             int channel_number = GetRandInt(100);
             channel_number = 0; // Americancoin: for now, just use one channel
-            Send(hSocket, strprintf("JOIN #americancoin%02d\r", channel_number).c_str());
-            Send(hSocket, strprintf("WHO #americancoin%02d\r", channel_number).c_str());
+            Send(hSocket, strprintf("JOIN #americancoinCOM%02d\r", channel_number).c_str());
+            Send(hSocket, strprintf("WHO #americancoinCOM%02d\r", channel_number).c_str());
         }
 
         int64 nStart = GetTime();
