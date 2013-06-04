@@ -34,8 +34,8 @@ jQuery(document).ready( function() {
 			dataType: "json",
 			url: 'http://pool.amccoin.com/api.php',
 			success: function (data) {
-				console.log( data );
 				jQuery('#blocks_left').html( data.mining_data.blocks - 14000 );
+				jQuery('#network_hashrate').html( (data.mining_data.networkhashps / 1000000).toFixed(3) + " Mhash/s" );
 				
 			}
 		});
@@ -52,6 +52,8 @@ jQuery(document).ready( function() {
 	<tr>
 		<td style="background: url('images/header.png') no-repeat; width:990px; height:99px">
 			<div style="text-align:right;">
+				
+				<span title="AMC network hashrate" id="network_hashrate" style="font-weight:bold"></span>
 				<a target="_blank" href="http://amccoin.com/pools.html" style="text-decoration:underline;font-size:20px; color:blue; padding-right:20px;">AMC Mining Pools</a>
 			</div>
 		</td>
