@@ -34,8 +34,8 @@ jQuery(document).ready( function() {
 			dataType: "json",
 			url: 'http://pool.amccoin.com/api.php',
 			success: function (data) {
-				
-				jQuery('#blocks_left').html( data.blocks - 14000 );
+				console.log( data );
+				jQuery('#blocks_left').html( data.mining_data.blocks - 14000 );
 				
 			}
 		});
