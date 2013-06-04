@@ -35,7 +35,7 @@ jQuery(document).ready( function() {
 			url: 'http://pool.amccoin.com/api.php',
 			success: function (data) {
 				
-				jQuery('#blocks_left').html( 14000 - data.blocks );
+				jQuery('#blocks_left').html( data.blocks - 14000 );
 				
 			}
 		});
@@ -76,11 +76,12 @@ jQuery(document).ready( function() {
 		<td bgcolor="#000"></td>
 	</tr>
 	<tr>
-		<td height="182" align="center" bgcolor="#FFFFFF" background="images/countdown.png"><h4><em>In order to give people an opportunity to set up their mining rigs...</em></h4>
-			<h2>there are <span id="blocks_left"></span> blocks left until coins will be rewarded.</h2>
-			<h4><em>Hurry! This is estimated to occur within 24 hours!</em></h4></td>
+		<td height="182" align="center" bgcolor="#FFFFFF" background="images/countdown.png">
+			<h4><em>In order to give people an opportunity to set up their mining rigs...</em></h4>
+			<h2>only block #14,000+ will award coins (<span id="blocks_left"></span> blocks rewarded so far).</h2>
+			<h4><em>Hurry! This is still the beginning of AMC's launch!</em></h4></td>
 	</tr>
-	<tr>
+	<tr style="display:none;">
 		<td height="80" align="center" bgcolor="#FFFFFF"><h1>Getting Started is Easy!</h1></td>
 	</tr>
 	<tr>
