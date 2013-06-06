@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AMC American Coin | AMCcoin | Americoin | AMC</title>
+<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="restricted-bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Prata' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Share:400,400italic,700italic">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript">
+$.noConflict();
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41260006-1', 'amccoin.com');
+  ga('send', 'pageview');
+
+</script>
+
+</head>
+<body>
+
+<script>
+jQuery(document).ready( function() {
+	
+	jQuery('.support_link').click( function(e) {
+		
+		var clicked_link = this;
+		var exchange = jQuery(this).attr( 'rel' );
+		
+		jQuery.ajax({
+			dataType: "json",
+			url: 'http://pool.amccoin.com/api.php?add_count=' + exchange,
+			success: function (data)
+			{
+				jQuery( clicked_link ).parent().html( '<div class="the_count">' + data.count + '</div><div class="the_message">' + data.support_text + '</div>' );
+				//jQuery('#blocks_left').html( data.mining_data.blocks - 14000 );
+				//jQuery('#network_hashrate').html( (data.mining_data.networkhashps / 1000000).toFixed(3) + " Mhash/s" );				
+			}
+		});
+	
+	} );
+
+} );
+</script>
+
+<table width="990" border="0" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td style="background: url('images/header.png') no-repeat; width:990px; height:99px">
+			<div style="text-align:right;">
+				
+				<span title="AMC network hashrate" id="network_hashrate" style="font-weight:bold"></span>
+				<a href="http://amccoin.com/resources.html" style="text-decoration:underline;font-size:20px; color:blue; padding-right:20px;">AMC Resources</a>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td height="80" align="center" bgcolor="#FFFFFF">
+			<h1>Resources for AMC</h1>
+			
+			<style>
+			.content_container {
+				text-align:left;
+				width:940px;
+				margin: 0px auto;
+			}
+			
+			.content_container a {
+				font-size:20px;
+				text-decoration:none;
+				color:blue;
+			}
+			.statement {
+				font-size:14px;
+				color:#000;
+			}
+			.the_check {
+				float:left;
+				width:50px;
+			}
+			.the_count {
+				color: #0061a3;
+				font-family: "Share";
+				font-size: 32px;
+				margin: 0px 10px 0px 0px;
+				line-height: 48px;
+				float:left;
+			}
+			.the_message {
+				line-height: 48px;				
+			}
+			</style>
+			<div class="content_container">
+				
+				<div class="bootstrap_area">
+					
+					<div class="row-fluid">
+						<div class="span4">
+							
+							<h2>Mining Pools</h2>
+							<ul>
+								<li><a target="_blank" href="http://pool.amccoin.com">Official Pool</a></li>
+								<li style="display:none;"><a target="_blank" href="http://107.20.187.147:9500/static/">Fenican P2Pool AMC</a></li>
+								<li><a target="_blank" href="http://149.210.130.171/">AJ's Pools (Beta)</a></li>
+								<li><a target="_blank" href="http://amc.scryptmining.com/">amc.scryptmining.com</a></li>
+								<li><a target="_blank" href="http://crypto-coins.de:8912/">crypto-coins.de (P2P)</a></li>
+							</ul>
+						</div>
+						<div class="span8">
+							
+							<h2>Exchanges</h2>
+					
+							<table class="table">
+								<tbody>
+									<tr>
+										<td>
+											<a target="_blank" href="https://btc-e.com/">
+												<img src="images/logo-btce.png" alt="BTC-e.com" style="margin-top:8px;">
+											</a>
+										</td>
+										<td>
+											<a href="#" rel="btce" class="support_link">
+												<img src="images/check.png" class="the_check">
+												<span class="statement">AMC should be traded on BTC-e.</span><br>
+												I Support This Message
+											</a>											
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a target="_blank" href="http://bter.com/">
+												<div style="color:#c60000; font-size:30px; line-height:48px;">Bter.com</div>
+											</a>
+										</td>
+										<td>
+											<a href="#" rel="bter" class="support_link">
+												<img src="images/check.png" class="the_check">
+												<span class="statement">AMC should be traded on Bter.</span><br>
+												I Support This Message
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a target="_blank" href="https://www.cryptsy.com/">
+												<img src="images/logo-cryptsy.jpg" alt="Cryptsy.com" style="height:48px;">
+											</a>
+										</td>
+										<td>
+											<a href="#" rel="cryptsy" class="support_link">
+												<img src="images/check.png" class="the_check">
+												<span class="statement">AMC should be traded on Cryptsy.</span><br>
+												I Support This Message
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a target="_blank" href="https://mcxnow.com/">
+												<img src="images/logo-mcxnow.png" alt="mcxNOW.com" style="height:48px;">
+											</a>
+										</td>
+										<td>
+											<a href="#" rel="mcxnow" class="support_link">
+												<img src="images/check.png" class="the_check">
+												<span class="statement">AMC should be traded on mcxNOW.</span><br>
+												I Support This Message
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a target="_blank" href="https://vircurex.com/">
+												<div style="font-size:34px; color:#000; line-height:48px;">Vircurex.com</div>											
+											</a>
+										</td>
+										<td>
+											<a href="#" rel="vircurex" class="support_link">
+												<img src="images/check.png" class="the_check">
+												<span class="statement">AMC should be traded on Vircurex.</span><br>
+												I Support This Message
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td bgcolor="#FFFFFF">&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFFFFF">&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFFFFF">&nbsp;</td>
+	</tr>
+</table>
+</body>
+</html>
