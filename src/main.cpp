@@ -31,6 +31,7 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 uint256 hashGenesisBlock("0x84409e2b69534476cfd1cecf030848abe98db872843498f179d755c627ce9a87");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Americancoin: starting difficulty is 1 / 2^12
+static uint256 minTarget = bnProofOfWorkLimit.getuint256();
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 CBigNum bnBestChainWork = 0;
@@ -3325,39 +3326,6 @@ void SHA256Transform(void* pstate, void* pinput, const void* pinit)
         ((uint32_t*)pstate)[i] = ctx.h[i];
 }
 
-//
-// ScanHash scans nonces looking for a hash with at least some zero bits.
-// It operates on big endian data.  Caller does the byte reversing.
-// All input buffers are 16-byte aligned.  nNonce is usually preserved
-// between calls, but periodically or if nNonce is 0xffff0000 or above,
-// the block is rebuilt and nNonce starts over at zero.
-//
-unsigned int static ScanHash_CryptoPP(char* pmidstate, char* pdata, char* phash1, char* phash, unsigned int& nHashesDone)
-{
-    unsigned int& nNonce = *(unsigned int*)(pdata + 12);
-    for (;;)
-    {
-        // Crypto++ SHA-256
-        // Hash pdata using pmidstate as the starting state into
-        // preformatted buffer phash1, then hash phash1 into phash
-        nNonce++;
-        SHA256Transform(phash1, pdata, pmidstate);
-        SHA256Transform(phash, phash1, pSHA256InitState);
-
-        // Return the nonce if the hash has at least some zero bits,
-        // caller will check if it has enough to reach the target
-        if (((unsigned short*)phash)[14] == 0)
-            return nNonce;
-
-        // If nothing found after trying for a while, return -1
-        if ((nNonce & 0xffff) == 0)
-        {
-            nHashesDone = 0xffff+1;
-            return (unsigned int) -1;
-        }
-    }
-}
-
 // Some explaining would be appreciated
 class COrphan
 {
@@ -3623,10 +3591,15 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
     uint256 hash = pblock->GetPoWHash();
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
-
-    if (hash > hashTarget)
+    if (hash > minTarget) {
+        printf("not viable hash: %s > %s\n", hash.GetHex().c_str(), minTarget.GetHex().c_str());
         return false;
-
+    } else
+        printf("viable hash found: %s < %s\n", hash.GetHex().c_str(), minTarget.GetHex().c_str());
+    if (hash > hashTarget) {
+        printf("hash not good enough: %s > %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
+        return false;
+    }
     //// debug print
     printf("BitcoinMiner:\n");
     printf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
@@ -3731,6 +3704,7 @@ void static BitcoinMiner(CWallet *pwallet)
             loop
             {
                 scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
+                if (thash <= minTarget) printf("possibly viable hash found: %s\n", thash.GetHex().c_str());
 
                 if (thash <= hashTarget)
                 {
@@ -3846,6 +3820,7 @@ void GenerateBitcoins(bool fGenerate, CWallet* pwallet)
         if (fLimitProcessors && nProcessors > nLimitProcessors)
             nProcessors = nLimitProcessors;
         int nAddThreads = nProcessors - vnThreadsRunning[THREAD_MINER];
+        printf("viable hash <= %s\n", minTarget.GetHex().c_str());
         printf("Starting %d BitcoinMiner threads\n", nAddThreads);
         for (int i = 0; i < nAddThreads; i++)
         {
