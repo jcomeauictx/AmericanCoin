@@ -31,7 +31,6 @@ unsigned int nTransactionsUpdated = 0;
 map<uint256, CBlockIndex*> mapBlockIndex;
 uint256 hashGenesisBlock("0x84409e2b69534476cfd1cecf030848abe98db872843498f179d755c627ce9a87");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Americancoin: starting difficulty is 1 / 2^12
-static uint256 minTarget = bnProofOfWorkLimit.getuint256();
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
 CBigNum bnBestChainWork = 0;
@@ -3591,15 +3590,10 @@ bool CheckWork(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
     uint256 hash = pblock->GetPoWHash();
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
-    if (hash > minTarget) {
-        printf("not viable hash: %s > %s\n", hash.GetHex().c_str(), minTarget.GetHex().c_str());
+
+    if (hash > hashTarget)
         return false;
-    } else
-        printf("viable hash found: %s < %s\n", hash.GetHex().c_str(), minTarget.GetHex().c_str());
-    if (hash > hashTarget) {
-        printf("hash not good enough: %s > %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
-        return false;
-    }
+
     //// debug print
     printf("BitcoinMiner:\n");
     printf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
@@ -3704,7 +3698,6 @@ void static BitcoinMiner(CWallet *pwallet)
             loop
             {
                 scrypt_1024_1_1_256_sp(BEGIN(pblock->nVersion), BEGIN(thash), scratchpad);
-                if (thash <= minTarget) printf("possibly viable hash found: %s\n", thash.GetHex().c_str());
 
                 if (thash <= hashTarget)
                 {
@@ -3820,7 +3813,6 @@ void GenerateBitcoins(bool fGenerate, CWallet* pwallet)
         if (fLimitProcessors && nProcessors > nLimitProcessors)
             nProcessors = nLimitProcessors;
         int nAddThreads = nProcessors - vnThreadsRunning[THREAD_MINER];
-        printf("viable hash <= %s\n", minTarget.GetHex().c_str());
         printf("Starting %d BitcoinMiner threads\n", nAddThreads);
         for (int i = 0; i < nAddThreads; i++)
         {
