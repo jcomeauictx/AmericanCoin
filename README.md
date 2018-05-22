@@ -2,6 +2,11 @@ Americancoin, Hell Yea
 =========
 
 The most patriotic crypto-currency ever.
+=========
+
+Web page
+=========
+https://bitcointalk.org/index.php?topic=219165.0
 
 Technical nonsense 
 =========

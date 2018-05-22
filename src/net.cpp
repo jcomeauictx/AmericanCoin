@@ -1032,10 +1032,14 @@ void ThreadMapPort2(void* parg)
 #ifndef UPNPDISCOVER_SUCCESS
     /* miniupnpc 1.5 */
     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0);
+#elif MINIUPNPC_API_VERSION < 14
+     /* miniupnpc 1.6 */
+     int error = 0;
+     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, &error);
 #else
-    /* miniupnpc 1.6 */
+    /* miniupnpc 1.9.20150730 */
     int error = 0;
-    devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, &error);
+    devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, 2, &error);
 #endif
 
     struct UPNPUrls urls;
@@ -1143,9 +1147,9 @@ void MapPort()
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
-    {"node1.amccoin.com", "node1.amccoin.com"},
-    {"node2.amccoin.com", "node2.amccoin.com"},
-    {"node3.amccoin.com", "node3.amccoin.com"},
+    //{"node1.amccoin.com", "node1.domain.dev"},
+    //{"node2.amccoin.com", "node2.domain.dev"},
+    //{"node3.amccoin.com", "node3.domain.dev"},
 };
 
 void ThreadDNSAddressSeed(void* parg)
