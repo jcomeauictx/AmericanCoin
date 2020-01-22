@@ -2,13 +2,13 @@ OPENSSL_LIB_PATH := $(HOME)/lib
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
-build:
+build: $(OPENSSL_LIB_PATH)/include/openssl
 	type g++ || \
 	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
-$(dir $(OPENSSL_LIB_PATH))include/openssl: ../../openssl-1.0.2a
-	cd $(<D) && ../config --prefix=$(dir $(OPENSSL_LIB_PATH))
-	cd $(<D) && make install
+$(OPENSSL_LIB_PATH)/include/openssl: ../../openssl-1.0.2a
+	cd $< && ../config --prefix=$(dir $(OPENSSL_LIB_PATH))
+	cd $< && make install
 ../../openssl-1.0.2a: ../../openssl-1.0.2a.tar.gz
 	cd $(@D) && tar xfz $(@F)
 ../../openssl-1.0.2a.tar.gz:
