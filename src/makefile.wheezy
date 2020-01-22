@@ -1,0 +1,16 @@
+export
+build: $(OPENSSL_INCLUDE_PATH)/openssl
+	type g++ || \
+	 (echo 'Must "sudo make -f makefile.wheezy prepare"' first >&2; false)
+	$(MAKE) -f makefile.unix
+env:
+	$@
+prepare:
+	[ -w /usr ] || (echo Must be root to install package >&2; false)
+	# including git for completeness but you probably cloned this, so...
+	# also, you already had to have `make` to run this...
+	apt-get update
+	apt-get install git make libboost-all-dev g++ libdb++-dev libz-dev
+	apt-get install libminiupnpc-dev libssl-dev
+clean:
+	$(MAKE) -f makefile.unix $@
