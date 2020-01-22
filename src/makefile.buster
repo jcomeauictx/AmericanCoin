@@ -7,7 +7,7 @@ build: $(OPENSSL_INCLUDE_PATH)/openssl
 	type g++ || \
 	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
-$(OPENSSL_INCLUDE_PATH)/openssl): ../../openssl-1.0.2a
+$(OPENSSL_INCLUDE_PATH)/openssl: ../../openssl-1.0.2a
 	cd $< && ./config --prefix=$(dir $(OPENSSL_LIB_PATH))
 	cd $< && make install
 ../../openssl-1.0.2a: ../../openssl-1.0.2a.tar.gz
