@@ -16,8 +16,6 @@ $(OPENSSL_INCLUDE_PATH)/openssl): ../../openssl-1.0.2a
 	cd $(@D) && wget http://www.openssl.org/source/$(@F)
 env:
 	$@
-%:
-	$(MAKE) -f makefile.unix $*
 prepare:
 	[ -w /usr ] || (echo Must be root to install package >&2; false)
 	# including git for completeness but you probably cloned this, so...
@@ -27,3 +25,5 @@ prepare:
 	# shouldn't be necessary anyway
 	apt update
 	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
+%:
+	$(MAKE) -f makefile.unix $*
