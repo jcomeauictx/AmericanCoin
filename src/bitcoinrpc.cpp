@@ -2868,7 +2868,11 @@ void ThreadRPCServer2(void* parg)
 
     asio::io_service io_service;
 
+#ifdef BOOST_ASIO_ENABLE_OLD_SERVICES
+    ssl::context context(ssl::context::sslv23);
+#else
     ssl::context context(io_service, ssl::context::sslv23);
+#endif
     if (fUseSSL)
     {
         context.set_options(ssl::context::no_sslv2);
@@ -2884,7 +2888,11 @@ void ThreadRPCServer2(void* parg)
         else printf("ThreadRPCServer ERROR: missing server private key file %s\n", pathPKFile.string().c_str());
 
         string strCiphers = GetArg("-rpcsslciphers", "TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH");
+#ifdef BOOST_ASIO_ENABLE_OLD_SERVICES
+	SSL_CTX_set_cipher_list(context.native_handle(), strCiphers.c_str());
+#else
         SSL_CTX_set_cipher_list(context.impl(), strCiphers.c_str());
+#endif
     }
 
     // Try a dual IPv6/IPv4 socket, falling back to separate IPv4 and IPv6 sockets
@@ -3176,7 +3184,11 @@ Object CallRPC(const string& strMethod, const Array& params)
     // Connect to localhost
     bool fUseSSL = GetBoolArg("-rpcssl");
     asio::io_service io_service;
+#ifdef BOOST_ASIO_ENABLE_OLD_SERVICES
+    ssl::context context(ssl::context::sslv23);
+#else
     ssl::context context(io_service, ssl::context::sslv23);
+#endif
     context.set_options(ssl::context::no_sslv2);
     asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
     SSLIOStreamDevice<asio::ip::tcp> d(sslStream, fUseSSL);
