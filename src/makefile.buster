@@ -3,7 +3,8 @@ USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
 build:
-	type g++ || (echo 'Must "sudo make prepare"' first >&2; false)
+	type g++ || \
+	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
 $(dir $(OPENSSL_LIB_PATH))include/openssl: ../../openssl-1.0.2a
 	cd $(<D) && ../config --prefix=$(dir $(OPENSSL_LIB_PATH))
@@ -24,4 +25,4 @@ prepare:
 	# not using libminiupnpc-dev either, some functions changed and it
 	# shouldn't be necessary anyway
 	apt update
-	apt install git make libboost-dev-all g++ libdb++-dev libz-dev
+	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
