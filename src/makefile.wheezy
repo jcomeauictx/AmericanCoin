@@ -1,5 +1,5 @@
 export
-build: $(OPENSSL_INCLUDE_PATH)/openssl
+build:
 	type g++ || \
 	 (echo 'Must "sudo make -f makefile.wheezy prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
@@ -10,7 +10,13 @@ prepare:
 	# including git for completeness but you probably cloned this, so...
 	# also, you already had to have `make` to run this...
 	apt-get update
-	apt-get install git make libboost-all-dev g++ libdb++-dev libz-dev
-	apt-get install libminiupnpc-dev libssl-dev
+	apt-get install git make libboost-all-dev g++ libdb++-dev libz-dev \
+	 libminiupnpc-dev libssl-dev
 clean:
 	$(MAKE) -f makefile.unix $@
+$HOME/wheezy/.americancoind:
+	mkdir $@
+run: $HOME/wheezy/.americancoind ./americancoind
+	[ -f $</americancoin.conf ] || ./americancoind -datadir $< 2>&1 | \
+	 grep ^rpc > $</americancoin.conf
+	./americancoind -datadir $<
