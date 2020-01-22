@@ -468,9 +468,12 @@ CNode* FindNode(const CService& addr)
 
 CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
 {
+    printf("ConnectNode(%s, %s, %d)\n", addrConnect.ToString().c_str(), pszDest, nTimeout);
     if (pszDest == NULL) {
-        if (IsLocal(addrConnect))
+        if (IsLocal(addrConnect)) {
+            printf("ConnectNode: %s is local\n", addrConnect.ToString().c_str());
             return NULL;
+        }
 
         // Look for an existing connection
         CNode* pnode = FindNode((CService)addrConnect);
@@ -480,6 +483,7 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
                 pnode->AddRef(nTimeout);
             else
                 pnode->AddRef();
+            printf("connection to %s still good\n", pszDest ? pszDest : addrConnect.ToString().c_str());
             return pnode;
         }
     }
@@ -1520,10 +1524,15 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
     if (!strDest)
         if (IsLocal(addrConnect) ||
             FindNode((CNetAddr)addrConnect) || CNode::IsBanned(addrConnect) ||
-            FindNode(addrConnect.ToStringIPPort().c_str()))
-            return false;
-    if (strDest && FindNode(strDest))
+            FindNode(addrConnect.ToStringIPPort().c_str())) {
+                printf("%s local, banned, or already connected\n",
+                    addrConnect.ToStringIPPort().c_str());
+                return false;
+        }
+    if (strDest && FindNode(strDest)) {
+        printf("%s already connected\n", strDest);
         return false;
+    }
 
     vnThreadsRunning[THREAD_OPENCONNECTIONS]--;
     CNode* pnode = ConnectNode(addrConnect, strDest);
