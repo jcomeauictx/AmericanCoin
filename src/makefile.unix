@@ -130,7 +130,7 @@ all: americancoind
 -include obj-test/*.P
 
 obj/scrypt.o: scrypt.c
-	gcc -c -o $@ $^
+	gcc -c -I$(OPENSSL_INCLUDE_PATH) -o $@ $^
 
 obj/build.h: FORCE
 	/bin/sh ../share/genbuild.sh obj/build.h
