@@ -10,7 +10,7 @@ $(OPENSSL_LIB_PATH)/include/openssl: ../../openssl-1.0.2a
 	cd $< && ../config --prefix=$(dir $(OPENSSL_LIB_PATH))
 	cd $< && make install
 ../../openssl-1.0.2a: ../../openssl-1.0.2a.tar.gz
-	cd $(@D) && tar xfz $(@F)
+	cd $(@D) && tar xfz $(<F)
 ../../openssl-1.0.2a.tar.gz:
 	cd $(@D) && wget http://www.openssl.org/source/$(@F)
 env:
