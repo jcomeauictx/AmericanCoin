@@ -25,5 +25,5 @@ prepare:
 	# shouldn't be necessary anyway
 	apt update
 	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
-%:
-	$(MAKE) -f makefile.unix $*
+clean:
+	$(MAKE) -f makefile.unix $@
