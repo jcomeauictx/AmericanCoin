@@ -3,6 +3,7 @@ USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
 build:
+	type g++ || (echo 'Must "sudo make prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
 $(dir $(OPENSSL_LIB_PATH))include/openssl: ../../openssl-1.0.2a
 	cd $(<D) && ../config --prefix=$(dir $(OPENSSL_LIB_PATH))
@@ -11,7 +12,16 @@ $(dir $(OPENSSL_LIB_PATH))include/openssl: ../../openssl-1.0.2a
 	cd $(@D) && tar xfz $(@F)
 ../../openssl-1.0.2a.tar.gz:
 	cd $(@D) && wget http://www.openssl.org/source/$(@F)
-%:
-	$(MAKE) -f makefile.unix $*
 env:
 	$@
+%:
+	$(MAKE) -f makefile.unix $*
+prepare:
+	[ -w /usr ] || (echo Must be root to install package >&2; false)
+	# including git for completeness but you probably cloned this, so...
+	# also, you already had to have `make` to run this...
+	# skipping libssl-dev because we need older version
+	# not using libminiupnpc-dev either, some functions changed and it
+	# shouldn't be necessary anyway
+	apt update
+	apt install git make libboost-dev-all g++ libdb++-dev libz-dev
