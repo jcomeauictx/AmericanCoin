@@ -90,7 +90,7 @@ bool RecvLineIRC(SOCKET hSocket, string& strLine)
             ParseString(strLine, ' ', vWords);
             if (vWords.size() >= 1 && vWords[0] == "PING")
             {
-                strLine[1] = 'O';
+                strLine[1] = 'O';  // change to "PONG"
                 strLine += '\r';
                 Send(hSocket, strLine.c_str());
                 continue;
@@ -313,6 +313,8 @@ void ThreadIRCSeed2(void* parg)
             if (strLine.empty() || strLine.size() > 900 || strLine[0] != ':')
                 continue;
 
+            if (fDebugNet) printf("IRC %s\n", strLine.c_str());
+
             vector<string> vWords;
             ParseString(strLine, ' ', vWords);
             if (vWords.size() < 2)
@@ -347,11 +349,12 @@ void ThreadIRCSeed2(void* parg)
                     addr.nTime = GetAdjustedTime();
                     if (addrman.Add(addr, addrConnect, 51 * 60))
                         printf("IRC got new address: %s\n", addr.ToString().c_str());
+                    else printf("Add of IRC address %s failed\n", addr.ToString().c_str());
                     nGotIRCAddresses++;
                 }
                 else
                 {
-                    printf("IRC decode failed\n");
+                    printf("IRC decode of %s failed\n", pszName);
                 }
             }
         }
