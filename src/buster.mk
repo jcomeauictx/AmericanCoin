@@ -1,5 +1,7 @@
 # some recipes require bashisms
 SHELL=/bin/bash
+MAKEFILE := $(lastword $(MAKEFILE_LIST))
+DISTRO ?= $(MAKEFILE:.mk=)
 # use a version of openssl known to work
 OPENSSL_VERSION := openssl-1.0.2a
 OPENSSL_LIB_PATH := $(HOME)/$(OPENSSL_VERSION)/lib
@@ -11,11 +13,11 @@ export
 all: build run
 build: $(OPENSSL_INCLUDE_PATH)/openssl
 	type g++ || \
-	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
+	 (echo 'Must "sudo make -f $(MAKEFILE) prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
 $(OPENSSL_INCLUDE_PATH)/openssl: ../../$(OPENSSL_VERSION)
 	type gcc || \
-	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
+	 (echo 'Must "sudo make -f $(MAKEFILE) prepare"' first >&2; false)
 	cd $< && ./config --prefix=$(dir $(OPENSSL_LIB_PATH))
 	cd $< && make install
 ../../$(OPENSSL_VERSION): ../../$(OPENSSL_VERSION).tar.gz

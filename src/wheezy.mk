@@ -1,3 +1,5 @@
+# some recipes require bashisms
+SHELL=/bin/bash
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 DISTRO ?= $(MAKEFILE:.mk=)
 MACHINE ?= i386
@@ -29,7 +31,9 @@ $(HOME)/$(DISTRO)/.americancoind $(LOCATION):
 %/americancoin.conf: americancoind %
 	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 run: $(HOME)/$(DISTRO)/.americancoind/americancoin.conf
-	./americancoind -datadir=$(<D)
+	# just take the rpc login from config file
+	# we don't want it in daemon mode
+	./americancoind -printtoconsole -debugnet -conf=<(head -n 2 $<)
 $(LOCATION)/bin/bash: | $(LOCATION)
 	debootstrap --arch=$(MACHINE) $(DISTRO) $(LOCATION) $(ARCHIVE)
 debootstrap: $(LOCATION)/bin/bash
