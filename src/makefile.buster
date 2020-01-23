@@ -1,9 +1,12 @@
+# some recipes require bashisms
+SHELL=/bin/bash
 # use a version of openssl known to work
 OPENSSL_VERSION := openssl-1.0.2a
 OPENSSL_LIB_PATH := $(HOME)/$(OPENSSL_VERSION)/lib
 OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
+CONFIG ?= $(HOME)/.americancoin/americancoin.conf
 export
 all: build run
 build: $(OPENSSL_INCLUDE_PATH)/openssl
@@ -33,4 +36,6 @@ prepare:
 clean:
 	$(MAKE) -f makefile.unix $@
 run: americancoind
-	./$< -printtoconsole -debugnet | tee /tmp/americancoind.log
+	# just take the rpc login from config file
+	# we don't want it in daemon mode
+	./$< -printtoconsole -debugnet -conf=<(head -n 2 $(CONFIG))
