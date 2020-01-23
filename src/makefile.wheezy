@@ -14,9 +14,9 @@ prepare:
 	 libminiupnpc-dev libssl-dev
 clean:
 	$(MAKE) -f makefile.unix $@
-$HOME/wheezy/.americancoind:
-	mkdir $@
-run: $HOME/wheezy/.americancoind ./americancoind
-	[ -f $</americancoin.conf ] || ./americancoind -datadir $< 2>&1 | \
-	 grep ^rpc > $</americancoin.conf
-	./americancoind -datadir $<
+$(HOME)/wheezy/.americancoind:
+	mkdir -p $@
+%/americancoin.conf: americancoind %
+	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
+run: $(HOME)/wheezy/.americancoind/americancoin.conf
+	./americancoind -datadir=$(<D)
