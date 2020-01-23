@@ -323,6 +323,7 @@ void ThreadIRCSeed2(void* parg)
 
             if (vWords[1] == "352" && vWords.size() >= 8)
             {
+                // record from /WHO list
                 // index 7 is limited to 16 characters
                 // could get full length name at index 10, but would be different from join messages
                 strlcpy(pszName, vWords[7].c_str(), sizeof(pszName));
