@@ -5,6 +5,7 @@ OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
+all: build run
 build: $(OPENSSL_INCLUDE_PATH)/openssl
 	type g++ || \
 	 (echo 'Must "sudo make -f makefile.buster prepare"' first >&2; false)
@@ -31,3 +32,5 @@ prepare:
 	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
 clean:
 	$(MAKE) -f makefile.unix $@
+run: americancoind
+	./$< -printtoconsole -debugnet | tee /tmp/americancoind.log
