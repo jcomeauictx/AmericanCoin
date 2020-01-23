@@ -116,6 +116,9 @@ bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
             if (nReachability > nBestReachability || (nReachability == nBestReachability && nScore > nBestScore))
             {
                 addr = CService((*it).first, (*it).second.nPort);
+                if (fDebugNet) printf("GetLocal addr: %s, %d\n",
+                    (*it).first.ToString().c_str(),
+                    (*it).second.nPort);
                 nBestReachability = nReachability;
                 nBestScore = nScore;
             }
@@ -1027,7 +1030,7 @@ void ThreadMapPort2(void* parg)
 
     char port[6];
     sprintf(port, "%d", GetListenPort());
-
+    if (fDebugNet) printf("ThreadMapPort2: port=%s\n", port);
     const char * multicastif = 0;
     const char * minissdpdpath = 0;
     struct UPNPDev * devlist = 0;
@@ -1137,7 +1140,7 @@ void MapPort()
 #else
 void MapPort()
 {
-    // Intentionally left blank.
+    if (fDebugNet) printf("MapPort: port=%d\n", GetListenPort());
 }
 #endif
 
