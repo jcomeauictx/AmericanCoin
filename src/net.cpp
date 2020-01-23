@@ -116,7 +116,7 @@ bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
             if (nReachability > nBestReachability || (nReachability == nBestReachability && nScore > nBestScore))
             {
                 addr = CService((*it).first, (*it).second.nPort);
-                if (fDebugNet) printf("GetLocal addr: %s, %d\n",
+                if (fDebugNet) printf("GetLocal addr: %s:%i\n",
                     (*it).first.ToString().c_str(),
                     (*it).second.nPort);
                 nBestReachability = nReachability;
