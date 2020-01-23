@@ -30,6 +30,6 @@ $(HOME)/$(DISTRO)/.americancoind $(LOCATION):
 	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 run: $(HOME)/$(DISTRO)/.americancoind/americancoin.conf
 	./americancoind -datadir=$(<D)
-$(LOCATION)/bin/bash: $(LOCATION)
+$(LOCATION)/bin/bash: | $(LOCATION)
 	debootstrap --arch=$(MACHINE) $(DISTRO) $(LOCATION) $(ARCHIVE)
 debootstrap: $(LOCATION)/bin/bash
