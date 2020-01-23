@@ -375,7 +375,7 @@ bool AppInit2()
         fDebugNet = true;
     else
         fDebugNet = GetBoolArg("-debugnet");
-
+    printf("fDebugNet: %s\n", fDebugNet ? "true" : "false");
     bitdb.SetDetach(GetBoolArg("-detachdb", false));
 
 #if !defined(WIN32) && !defined(QT_GUI)
