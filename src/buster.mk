@@ -37,7 +37,11 @@ prepare:
 	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
 clean:
 	$(MAKE) -f makefile.unix $@
-run: americancoind
+$(HOME)/$(DISTRO)/.americancoind:
+	mkdir -p $@
+%/americancoin.conf: americancoind | %
+	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
+run: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf americancoind
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
-	./$< -printtoconsole -debugnet -conf=<(head -n 2 $(CONFIG))
+	./americancoind -printtoconsole -debugnet -conf=<(head -n 2 $(CONFIG))

@@ -30,7 +30,7 @@ $(HOME)/$(DISTRO)/.americancoind $(LOCATION):
 	mkdir -p $@
 %/americancoin.conf: americancoind | %
 	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
-run: $(HOME)/$(DISTRO)/.americancoind/americancoin.conf
+run: $(HOME)/$(DISTRO)/.americancoind/americancoin.conf americancoind
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
 	./americancoind -printtoconsole -debugnet \
