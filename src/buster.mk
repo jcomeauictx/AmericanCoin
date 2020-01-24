@@ -8,7 +8,6 @@ OPENSSL_LIB_PATH := $(HOME)/$(OPENSSL_VERSION)/lib
 OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
-CONFIG ?= $(HOME)/.americancoin/americancoin.conf
 export
 all: build run
 build: $(OPENSSL_INCLUDE_PATH)/openssl
@@ -37,11 +36,12 @@ prepare:
 	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
 clean:
 	$(MAKE) -f makefile.unix $@
-$(HOME)/$(DISTRO)/.americancoind:
+$(HOME)/$(DISTRO)/.americancoin:
 	mkdir -p $@
 %/americancoin.conf: americancoind | %
 	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 run: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf americancoind
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
-	./americancoind -printtoconsole -debugnet -conf=<(head -n 2 $(CONFIG))
+	./americancoind -printtoconsole -debugnet \
+	 -datadir=$(<D) -conf=<(head -n 2 $<)
