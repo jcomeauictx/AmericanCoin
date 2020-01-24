@@ -28,12 +28,13 @@ clean:
 	$(MAKE) -f makefile.unix $@
 $(HOME)/$(DISTRO)/.americancoind $(LOCATION):
 	mkdir -p $@
-%/americancoin.conf: americancoind %
+%/americancoin.conf: americancoind | %
 	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 run: $(HOME)/$(DISTRO)/.americancoind/americancoin.conf
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
-	./americancoind -printtoconsole -debugnet -conf=<(head -n 2 $<)
+	./americancoind -printtoconsole -debugnet \
+         -datadir=$(<D) -conf=<(head -n 2 $<)
 $(LOCATION)/bin/bash: | $(LOCATION)
 	debootstrap --arch=$(MACHINE) $(DISTRO) $(LOCATION) $(ARCHIVE)
 debootstrap: $(LOCATION)/bin/bash
