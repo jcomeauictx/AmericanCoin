@@ -313,7 +313,7 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
 {
     if (!addr.IsRoutable())
     {
-        printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString());
+        printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString().c_str());
         return false;
     }
 
@@ -335,21 +335,21 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
         // do not update if no new information is present
         if (!addr.nTime || (pinfo->nTime && addr.nTime <= pinfo->nTime))
         {
-            printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString());
+            printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString().c_str());
             return false;
         }
 
         // do not update if the entry was already in the "tried" table
         if (pinfo->fInTried)
         {
-            printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString());
+            printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString().c_str());
             return false;
         }
 
         // do not update if the max reference count is reached
         if (pinfo->nRefCount == ADDRMAN_NEW_BUCKETS_PER_ADDRESS)
         {
-            printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString());
+            printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString().c_str());
             return false;
         }
 
@@ -359,7 +359,7 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
             nFactor *= 2;
         if (nFactor > 1 && (GetRandInt(nFactor) != 0))
         {
-            printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString());
+            printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString().c_str());
             return false;
         }
     } else {
