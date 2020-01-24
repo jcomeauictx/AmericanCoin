@@ -459,7 +459,7 @@ int CAddrMan::Check_()
     {
         int n = (*it).first;
         CAddrInfo &info = (*it).second;
-        printf("CAddrInfo dump: %s", info.ToString().c_str());
+        printf("CAddrInfo dump: %s\n", info.ToString().c_str());
         if (info.fInTried)
         {
 

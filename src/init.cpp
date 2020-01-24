@@ -729,6 +729,7 @@ bool AppInit2()
 
     printf("Loaded %i addresses from peers.dat  %" PRI64d "ms\n",
            addrman.size(), GetTimeMillis() - nStart);
+    if (fDebugNet) addrman.Check();
 
     // ********************************************************* Step 10: start node
 

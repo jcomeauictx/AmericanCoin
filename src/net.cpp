@@ -493,7 +493,7 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
 
 
     /// debug print
-    printf("trying connection %s lastseen=%.1fhrs\n",
+    printf("ConnectNode: trying connection %s lastseen=%.1fhrs\n",
         pszDest ? pszDest : addrConnect.ToString().c_str(),
         pszDest ? 0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
 
@@ -1301,6 +1301,7 @@ void static ProcessOneShot()
     CAddress addr;
     CSemaphoreGrant grant(*semOutbound, true);
     if (grant) {
+        if (fDebugNet) printf("ProcessOneShot() calling OpenNetworkConnection(...)\n");
         if (!OpenNetworkConnection(addr, &grant, strDest.c_str(), true))
             AddOneShot(strDest);
     }
@@ -1319,6 +1320,7 @@ void ThreadOpenConnections2(void* parg)
             BOOST_FOREACH(string strAddr, mapMultiArgs["-connect"])
             {
                 CAddress addr;
+                if (fDebugNet) printf("ThreadOpenConnections2 trying %s from mapMultiArgs[\"-connect\"]\n", addr.ToString().c_str());
                 OpenNetworkConnection(addr, NULL, strAddr.c_str());
                 for (int i = 0; i < 10 && i < nLoop; i++)
                 {
@@ -1417,8 +1419,10 @@ void ThreadOpenConnections2(void* parg)
             break;
         }
 
-        if (addrConnect.IsValid())
+        if (addrConnect.IsValid()) {
+            if (fDebugNet) printf("ThreadOpenConnections2 trying randomly selected address %s\n", addrConnect.ToString().c_str());
             OpenNetworkConnection(addrConnect, &grant);
+        }
     }
 }
 
@@ -1457,6 +1461,7 @@ void ThreadOpenAddedConnections2(void* parg)
             BOOST_FOREACH(string& strAddNode, mapMultiArgs["-addnode"]) {
                 CAddress addr;
                 CSemaphoreGrant grant(*semOutbound);
+                if (fDebugNet) printf("ThreadOpenAddedConnections2 trying %s from mapMultiArgs[\"-addnode\"]\n", addr.ToString().c_str());
                 OpenNetworkConnection(addr, &grant, strAddNode.c_str());
                 Sleep(500);
             }
@@ -1529,7 +1534,7 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
             FindNode((CNetAddr)addrConnect) || CNode::IsBanned(addrConnect) ||
             FindNode(addrConnect.ToStringIPPort().c_str())) {
                 if (fDebugNet) printf("%s local, banned, or already connected\n",
-                    addrConnect.ToStringIPPort().c_str());
+                    addrConnect.ToString().c_str());
                 return false;
         }
     if (strDest && FindNode(strDest)) {
@@ -1538,6 +1543,7 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
     }
 
     vnThreadsRunning[THREAD_OPENCONNECTIONS]--;
+    if (fDebugNet) printf("OpenNetworkConnection calling ConnectNode(%s, %s)", addrConnect.ToString().c_str(), strDest);
     CNode* pnode = ConnectNode(addrConnect, strDest);
     vnThreadsRunning[THREAD_OPENCONNECTIONS]++;
     if (fShutdown)
