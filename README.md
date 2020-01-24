@@ -14,6 +14,14 @@ make -f buster.mk prepare
 su $NEWUSER -c "make -f buster.mk test"
 ```
 
+It will compile and run until you hit ^C. At least let it run until it starts
+fetching blocks. From then on, you can just run the `americancoind` daemon
+from the command line. The first time, it will prompt you to create your
+americancoin.conf file.
+
+As of 2020-01-24, you can use the $10/month, 2GB RAM standard droplet. The
+cheapest droplet doesn't have enough RAM.
+
 
 Original README follows
 
