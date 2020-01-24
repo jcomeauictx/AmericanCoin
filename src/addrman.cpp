@@ -311,9 +311,10 @@ void CAddrMan::Good_(const CService &addr, int64 nTime)
 
 bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePenalty)
 {
+    if (fDebugNet) printf("CAddrMan::Add_: attempting %s\n", addr.ToString().c_str());
     if (!addr.IsRoutable())
     {
-        printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString().c_str());
+        if (fDebugNet) printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString().c_str());
         return false;
     }
 
@@ -335,21 +336,21 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
         // do not update if no new information is present
         if (!addr.nTime || (pinfo->nTime && addr.nTime <= pinfo->nTime))
         {
-            printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString().c_str());
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString().c_str());
             return false;
         }
 
         // do not update if the entry was already in the "tried" table
         if (pinfo->fInTried)
         {
-            printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString().c_str());
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString().c_str());
             return false;
         }
 
         // do not update if the max reference count is reached
         if (pinfo->nRefCount == ADDRMAN_NEW_BUCKETS_PER_ADDRESS)
         {
-            printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString().c_str());
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString().c_str());
             return false;
         }
 
@@ -359,10 +360,11 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
             nFactor *= 2;
         if (nFactor > 1 && (GetRandInt(nFactor) != 0))
         {
-            printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString().c_str());
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString().c_str());
             return false;
         }
     } else {
+        if (fDebugNet) printf("CAddrMan::Add_ of %s succeeded\n", addr.ToString().c_str());
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64)0, (int64)pinfo->nTime - nTimePenalty);
 //        printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
