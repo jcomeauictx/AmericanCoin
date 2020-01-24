@@ -360,7 +360,7 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
             nFactor *= 2;
         if (nFactor > 1 && (GetRandInt(nFactor) != 0))
         {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString().c_str());
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed, refcount=%d\n", addr.ToString().c_str(), pinfo->nRefCount);
             return false;
         }
     } else {
