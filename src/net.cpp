@@ -116,13 +116,17 @@ bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
             if (nReachability > nBestReachability || (nReachability == nBestReachability && nScore > nBestScore))
             {
                 addr = CService((*it).first, (*it).second.nPort);
-                if (fDebugNet) printf("GetLocal addr: %s:%i\n",
-                    (*it).first.ToString().c_str(),
-                    (*it).second.nPort);
+                if (fDebugNet) printf("GetLocal addr: %s:%i\n", (*it).first.ToString().c_str(), (*it).second.nPort);
                 nBestReachability = nReachability;
                 nBestScore = nScore;
             }
         }
+    }
+    if (addr.GetPort() != GetListenPort())
+    {
+        printf("ERROR GetLocal returned bad port %i\n", addr.GetPort());
+        addr.SetPort(GetListenPort());
+        printf("CORRECTED addr to %s\n", addr.ToString().c_str());
     }
     return nBestScore >= 0;
 }
@@ -244,7 +248,14 @@ bool AddLocal(const CService& addr, int nScore)
         SetReachable(addr.GetNetwork());
     }
 
-    AdvertizeLocal();
+    if (addr.GetPort() != GetListenPort())
+    {
+        printf("WARNING: AddLocal adding bad port %s", addr.ToString().c_str());
+    }
+    else
+    {
+        AdvertizeLocal();
+    }
 
     return true;
 }

@@ -291,12 +291,6 @@ void ThreadIRCSeed2(void* parg)
                 // IRC lets you to re-nick
                 AddLocal(addrFromIRC, LOCAL_IRC);
                 myAddr = GetLocalAddress(&addrConnect);
-                if (myAddr.GetPort() != GetDefaultPort())
-                {
-                    printf("ERROR GetLocalAddress returned bad port %i\n", myAddr.GetPort());
-                    myAddr.SetPort(GetDefaultPort());
-		    printf("CORRECTED myAddr to %s\n", myAddr.ToString().c_str());
-		}
                 strMyName = EncodeAddress(myAddr);
                 Send(hSocket, strprintf("NICK %s\r", strMyName.c_str()).c_str());
             }

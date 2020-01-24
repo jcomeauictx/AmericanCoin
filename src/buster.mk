@@ -9,7 +9,6 @@ OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
-all: build run
 build: $(OPENSSL_INCLUDE_PATH)/openssl
 	type g++ || \
 	 (echo 'Must "sudo make -f $(MAKEFILE) prepare"' first >&2; false)
@@ -38,10 +37,11 @@ clean:
 	$(MAKE) -f makefile.unix $@
 $(HOME)/$(DISTRO)/.americancoin:
 	mkdir -p $@
-%/americancoin.conf: americancoind | %
-	./$< -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
+%/americancoin.conf: | americancoind %
+	./americancoind -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 run: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf americancoind
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
 	./americancoind -printtoconsole -debugnet \
 	 -datadir=$(<D) -conf=<(head -n 2 $<)
+.PRECIOUS: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf
