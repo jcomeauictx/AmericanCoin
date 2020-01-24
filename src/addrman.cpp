@@ -312,7 +312,10 @@ void CAddrMan::Good_(const CService &addr, int64 nTime)
 bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePenalty)
 {
     if (!addr.IsRoutable())
+    {
+        printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString());
         return false;
+    }
 
     bool fNew = false;
     int nId;
@@ -331,22 +334,34 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
 
         // do not update if no new information is present
         if (!addr.nTime || (pinfo->nTime && addr.nTime <= pinfo->nTime))
+        {
+            printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString());
             return false;
+        }
 
         // do not update if the entry was already in the "tried" table
         if (pinfo->fInTried)
+        {
+            printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString());
             return false;
+        }
 
         // do not update if the max reference count is reached
         if (pinfo->nRefCount == ADDRMAN_NEW_BUCKETS_PER_ADDRESS)
+        {
+            printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString());
             return false;
+        }
 
         // stochastic test: previous nRefCount == N: 2^N times harder to increase it
         int nFactor = 1;
         for (int n=0; n<pinfo->nRefCount; n++)
             nFactor *= 2;
         if (nFactor > 1 && (GetRandInt(nFactor) != 0))
+        {
+            printf("CAddrMan::Add_ of %s failed stochastic test\n", addr.ToString());
             return false;
+        }
     } else {
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64)0, (int64)pinfo->nTime - nTimePenalty);
