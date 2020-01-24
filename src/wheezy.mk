@@ -28,6 +28,7 @@ clean:
 	$(MAKE) -f makefile.unix $@
 $(HOME)/$(DISTRO)/.americancoin $(LOCATION):
 	mkdir -p $@
+americancoind: build
 %/americancoin.conf: | americancoind %
 	./americancoind -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
 test: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf americancoind
