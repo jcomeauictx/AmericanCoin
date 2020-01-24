@@ -355,21 +355,21 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
         }
 
         // stochastic test: previous nRefCount == N: 2^N times harder to increase it
-        int nFactor = 1;
-        for (int n=0; n<pinfo->nRefCount; n++)
-            nFactor *= 2;
-        if (nFactor > 1 && (GetRandInt(nFactor) != 0))
+        int nFactor = 1 << pinfo->nRefCount;
+        int randInt = GetRandInt(nFactor);
+        if (nFactor > 1 && randInt != 0)
         {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed, refcount=%d\n", addr.ToString().c_str(), pinfo->nRefCount);
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed, refcount=%d, randInt=%d\n", addr.ToString().c_str(), pinfo->nRefCount, randInt);
             return false;
         }
+        if (fDebugNet) printf("CAddrMan::Add_ of %s falling through with fNew=false but no errors\n");
     } else {
-        if (fDebugNet) printf("CAddrMan::Add_ of %s succeeded\n", addr.ToString().c_str());
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64)0, (int64)pinfo->nTime - nTimePenalty);
 //        printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
         nNew++;
         fNew = true;
+        if (fDebugNet) printf("CAddrMan::Add_ of %s succeeded\n", addr.ToString().c_str());
     }
 
     int nUBucket = pinfo->GetNewBucket(nKey, source);
