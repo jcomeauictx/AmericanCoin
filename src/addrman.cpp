@@ -355,18 +355,18 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
         }
 
         // stochastic test: previous nRefCount == N: 2^N times harder to increase it
-        int nFactor = 1 << pinfo->nRefCount;
+        int nFactor = pinfo->nRefCount <= 0 ? 0 : 1 << pinfo->nRefCount;
         int randInt = GetRandInt(nFactor);
         if (nFactor > 1 && randInt != 0)
         {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed, refcount=%d, randInt=%d\n", addr.ToString().c_str(), pinfo->nRefCount, randInt);
+            if (fDebugNet) printf("CAddrMan::Add_ of %s failed stochastic test, refcount=%d, randInt=%d\n", addr.ToString().c_str(), pinfo->nRefCount, randInt);
             return false;
         }
-        if (fDebugNet) printf("CAddrMan::Add_ of %s falling through with fNew=false but no errors\n");
+        if (fDebugNet) printf("CAddrMan::Add_ of %s falling through with fNew=false but no errors\n", addr.ToString().c_str());
     } else {
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64)0, (int64)pinfo->nTime - nTimePenalty);
-//        printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
+        if (fDebugNet) printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
         nNew++;
         fNew = true;
         if (fDebugNet) printf("CAddrMan::Add_ of %s succeeded\n", addr.ToString().c_str());
@@ -459,6 +459,7 @@ int CAddrMan::Check_()
     {
         int n = (*it).first;
         CAddrInfo &info = (*it).second;
+        printf("CAddrInfo dump: %s", info.ToString().c_str());
         if (info.fInTried)
         {
 
