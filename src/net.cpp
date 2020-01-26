@@ -116,17 +116,10 @@ bool GetLocal(CService& addr, const CNetAddr *paddrPeer)
             if (nReachability > nBestReachability || (nReachability == nBestReachability && nScore > nBestScore))
             {
                 addr = CService((*it).first, (*it).second.nPort);
-                if (fDebugNet) printf("GetLocal addr: %s:%i\n", (*it).first.ToString().c_str(), (*it).second.nPort);
                 nBestReachability = nReachability;
                 nBestScore = nScore;
             }
         }
-    }
-    if (addr.GetPort() != GetListenPort())
-    {
-        printf("ERROR GetLocal returned bad port %i\n", addr.GetPort());
-        addr.SetPort(GetListenPort());
-        printf("CORRECTED addr to %s\n", addr.ToString().c_str());
     }
     return nBestScore >= 0;
 }
@@ -242,20 +235,13 @@ bool AddLocal(const CService& addr, int nScore)
         bool fAlready = mapLocalHost.count(addr) > 0;
         LocalServiceInfo &info = mapLocalHost[addr];
         if (!fAlready || nScore >= info.nScore) {
-            info.nScore = nScore;
-            info.nPort = addr.GetPort() + (fAlready ? 1 : 0);
+            info.nScore = nScore + (fAlready ? 1 : 0);
+            info.nPort = addr.GetPort();
         }
         SetReachable(addr.GetNetwork());
     }
 
-    if (addr.GetPort() != GetListenPort())
-    {
-        printf("WARNING: AddLocal adding bad port %s", addr.ToString().c_str());
-    }
-    else
-    {
-        AdvertizeLocal();
-    }
+    AdvertizeLocal();
 
     return true;
 }
@@ -504,7 +490,7 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
 
 
     /// debug print
-    printf("ConnectNode: trying connection %s lastseen=%.1fhrs\n",
+    printf("trying connection %s lastseen=%.1fhrs\n",
         pszDest ? pszDest : addrConnect.ToString().c_str(),
         pszDest ? 0 : (double)(GetAdjustedTime() - addrConnect.nTime)/3600.0);
 
@@ -1041,7 +1027,7 @@ void ThreadMapPort2(void* parg)
 
     char port[6];
     sprintf(port, "%d", GetListenPort());
-    if (fDebugNet) printf("ThreadMapPort2: port=%s\n", port);
+
     const char * multicastif = 0;
     const char * minissdpdpath = 0;
     struct UPNPDev * devlist = 0;
@@ -1151,7 +1137,7 @@ void MapPort()
 #else
 void MapPort()
 {
-    if (fDebugNet) printf("MapPort: port=%d\n", GetListenPort());
+    // Intentionally left blank.
 }
 #endif
 
@@ -1312,7 +1298,6 @@ void static ProcessOneShot()
     CAddress addr;
     CSemaphoreGrant grant(*semOutbound, true);
     if (grant) {
-        if (fDebugNet) printf("ProcessOneShot() calling OpenNetworkConnection(...)\n");
         if (!OpenNetworkConnection(addr, &grant, strDest.c_str(), true))
             AddOneShot(strDest);
     }
@@ -1331,7 +1316,6 @@ void ThreadOpenConnections2(void* parg)
             BOOST_FOREACH(string strAddr, mapMultiArgs["-connect"])
             {
                 CAddress addr;
-                if (fDebugNet) printf("ThreadOpenConnections2 trying %s from mapMultiArgs[\"-connect\"]\n", addr.ToString().c_str());
                 OpenNetworkConnection(addr, NULL, strAddr.c_str());
                 for (int i = 0; i < 10 && i < nLoop; i++)
                 {
@@ -1430,10 +1414,8 @@ void ThreadOpenConnections2(void* parg)
             break;
         }
 
-        if (addrConnect.IsValid()) {
-            if (fDebugNet) printf("ThreadOpenConnections2 trying randomly selected address %s\n", addrConnect.ToString().c_str());
+        if (addrConnect.IsValid())
             OpenNetworkConnection(addrConnect, &grant);
-        }
     }
 }
 
@@ -1472,7 +1454,6 @@ void ThreadOpenAddedConnections2(void* parg)
             BOOST_FOREACH(string& strAddNode, mapMultiArgs["-addnode"]) {
                 CAddress addr;
                 CSemaphoreGrant grant(*semOutbound);
-                if (fDebugNet) printf("ThreadOpenAddedConnections2 trying %s from mapMultiArgs[\"-addnode\"]\n", addr.ToString().c_str());
                 OpenNetworkConnection(addr, &grant, strAddNode.c_str());
                 Sleep(500);
             }
@@ -1545,7 +1526,7 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
             FindNode((CNetAddr)addrConnect) || CNode::IsBanned(addrConnect) ||
             FindNode(addrConnect.ToStringIPPort().c_str())) {
                 if (fDebugNet) printf("%s local, banned, or already connected\n",
-                    addrConnect.ToString().c_str());
+                    addrConnect.ToStringIPPort().c_str());
                 return false;
         }
     if (strDest && FindNode(strDest)) {
@@ -1554,7 +1535,6 @@ bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOu
     }
 
     vnThreadsRunning[THREAD_OPENCONNECTIONS]--;
-    if (fDebugNet) printf("OpenNetworkConnection calling ConnectNode(%s, %s)", addrConnect.ToString().c_str(), strDest);
     CNode* pnode = ConnectNode(addrConnect, strDest);
     vnThreadsRunning[THREAD_OPENCONNECTIONS]++;
     if (fShutdown)
