@@ -375,7 +375,6 @@ bool AppInit2()
         fDebugNet = true;
     else
         fDebugNet = GetBoolArg("-debugnet");
-    printf("fDebugNet: %s\n", fDebugNet ? "true" : "false");
     bitdb.SetDetach(GetBoolArg("-detachdb", false));
 
 #if !defined(WIN32) && !defined(QT_GUI)
@@ -729,7 +728,6 @@ bool AppInit2()
 
     printf("Loaded %i addresses from peers.dat  %" PRI64d "ms\n",
            addrman.size(), GetTimeMillis() - nStart);
-    if (fDebugNet) addrman.Check();
 
     // ********************************************************* Step 10: start node
 

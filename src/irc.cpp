@@ -282,7 +282,6 @@ void ThreadIRCSeed2(void* parg)
 
         // Get our external IP from the IRC server and re-nick before joining the channel
         CNetAddr addrFromIRC;
-        CAddress myAddr;
         if (GetIPFromIRC(hSocket, strMyName, addrFromIRC))
         {
             printf("GetIPFromIRC() returned %s\n", addrFromIRC.ToString().c_str());
@@ -290,8 +289,7 @@ void ThreadIRCSeed2(void* parg)
             {
                 // IRC lets you to re-nick
                 AddLocal(addrFromIRC, LOCAL_IRC);
-                myAddr = GetLocalAddress(&addrConnect);
-                strMyName = EncodeAddress(myAddr);
+                strMyName = EncodeAddress(GetLocalAddress(&addrConnect));
                 Send(hSocket, strprintf("NICK %s\r", strMyName.c_str()).c_str());
             }
         }
@@ -314,8 +312,6 @@ void ThreadIRCSeed2(void* parg)
         {
             if (strLine.empty() || strLine.size() > 900 || strLine[0] != ':')
                 continue;
-
-            if (fDebugNet) printf("IRC %s\n", strLine.c_str());
 
             vector<string> vWords;
             ParseString(strLine, ' ', vWords);
@@ -351,7 +347,6 @@ void ThreadIRCSeed2(void* parg)
                     addr.nTime = GetAdjustedTime();
                     if (addrman.Add(addr, addrConnect, 51 * 60))
                         printf("IRC got new address: %s\n", addr.ToString().c_str());
-                    else printf("Add of IRC address %s failed\n", addr.ToString().c_str());
                     nGotIRCAddresses++;
                 }
                 else

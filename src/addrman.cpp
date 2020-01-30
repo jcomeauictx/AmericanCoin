@@ -311,12 +311,8 @@ void CAddrMan::Good_(const CService &addr, int64 nTime)
 
 bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePenalty)
 {
-    if (fDebugNet) printf("CAddrMan::Add_: attempting %s\n", addr.ToString().c_str());
     if (!addr.IsRoutable())
-    {
-        if (fDebugNet) printf("CAddrMan::Add_ of %s failed: not routable\n", addr.ToString().c_str());
         return false;
-    }
 
     bool fNew = false;
     int nId;
@@ -335,41 +331,27 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64 nTimePen
 
         // do not update if no new information is present
         if (!addr.nTime || (pinfo->nTime && addr.nTime <= pinfo->nTime))
-        {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: nothing new\n", addr.ToString().c_str());
             return false;
-        }
 
         // do not update if the entry was already in the "tried" table
         if (pinfo->fInTried)
-        {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: already tried\n", addr.ToString().c_str());
             return false;
-        }
 
         // do not update if the max reference count is reached
         if (pinfo->nRefCount == ADDRMAN_NEW_BUCKETS_PER_ADDRESS)
-        {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed: max refcount\n", addr.ToString().c_str());
             return false;
-        }
 
         // stochastic test: previous nRefCount == N: 2^N times harder to increase it
         int nFactor = pinfo->nRefCount <= 0 ? 0 : 1 << pinfo->nRefCount;
         int randInt = GetRandInt(nFactor);
         if (nFactor > 1 && randInt != 0)
-        {
-            if (fDebugNet) printf("CAddrMan::Add_ of %s failed stochastic test, refcount=%d, randInt=%d\n", addr.ToString().c_str(), pinfo->nRefCount, randInt);
             return false;
-        }
-        if (fDebugNet) printf("CAddrMan::Add_ of %s falling through with fNew=false but no errors\n", addr.ToString().c_str());
     } else {
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64)0, (int64)pinfo->nTime - nTimePenalty);
         if (fDebugNet) printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
         nNew++;
         fNew = true;
-        if (fDebugNet) printf("CAddrMan::Add_ of %s succeeded\n", addr.ToString().c_str());
     }
 
     int nUBucket = pinfo->GetNewBucket(nKey, source);
@@ -459,7 +441,6 @@ int CAddrMan::Check_()
     {
         int n = (*it).first;
         CAddrInfo &info = (*it).second;
-        printf("CAddrInfo dump: %s\n", info.ToString().c_str());
         if (info.fInTried)
         {
 
