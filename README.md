@@ -20,7 +20,8 @@ from the command line. The first time, it will prompt you to create your
 americancoin.conf file.
 
 As of 2020-01-24, you can use the $10/month, 2GB RAM standard droplet. The
-cheapest droplet doesn't have enough RAM.
+cheapest droplet doesn't have enough RAM to compile AmericanCoin; it might be
+fine for running the daemon, though, once you have it compiled.
 
 
 Original README follows
