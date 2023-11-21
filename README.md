@@ -23,6 +23,15 @@ As of 2020-01-24, you can use the $10/month, 2GB RAM standard droplet. The
 cheapest droplet doesn't have enough RAM to compile AmericanCoin; it might be
 fine for running the daemon, though, once you have it compiled.
 
+If you want to run it on a newer operating system, you can `sudo debootstrap
+buster /opt/buster64`, chroot to that directory, and build AmericanCoin; then
+run make a file $HOME/.local/bin/americancoind containing:
+
+```bash
+exec /opt/buster64/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 \
+ --library-path /opt/buster64/lib/x86_64-linux-gnu/ \
+ /opt/buster64/usr/src/jcomeauictx/americancoin/src/americancoind $*
+```
 
 Original README follows
 
