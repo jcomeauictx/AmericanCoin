@@ -30,7 +30,7 @@ make a file $HOME/.local/bin/americancoind containing:
 ```bash
 exec /opt/buster64/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 \
  --library-path /opt/buster64/lib/x86_64-linux-gnu/ \
- /opt/buster64/usr/src/jcomeauictx/americancoin/src/americancoind $*
+ /opt/buster64/usr/src/jcomeauictx/americancoin/src/americancoind "$@"
 ```
 
 Original README follows
