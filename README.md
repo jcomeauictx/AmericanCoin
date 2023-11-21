@@ -25,7 +25,7 @@ fine for running the daemon, though, once you have it compiled.
 
 If you want to run it on a newer operating system, you can `sudo debootstrap
 buster /opt/buster64`, chroot to that directory, and build AmericanCoin; then
-run make a file $HOME/.local/bin/americancoind containing:
+make a file $HOME/.local/bin/americancoind containing:
 
 ```bash
 exec /opt/buster64/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 \
