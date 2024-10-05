@@ -32,7 +32,7 @@ prepare:
 	# not using libminiupnpc-dev either, some functions changed and it
 	# shouldn't be necessary anyway
 	apt update
-	apt install git make libboost-all-dev g++ libdb++-dev libz-dev
+	apt install --yes git make libboost-all-dev g++ libdb++-dev libz-dev
 clean:
 	$(MAKE) -f makefile.unix $@
 $(HOME)/$(DISTRO)/.americancoin:
