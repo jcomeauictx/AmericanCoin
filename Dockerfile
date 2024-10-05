@@ -2,15 +2,14 @@
 FROM debian:buster
 ARG USERNAME=americancoiner
 ARG REALNAME='AmericanCoin Daemon'
+ARG WORKDIR=/usr/src/jcomeauictx
 ARG GITHUB=https://github.com/jcomeauictx
-WORKDIR /usr/src/jcomeauictx
+WORKDIR $WORKDIR
 RUN adduser --quiet --disabled-password --gecos "$REALNAME" $USERNAME
 RUN apt update
-RUN apt install --yes git make finger systemd
-#RUN reboot  # so systemd can take over as init process (unnecessary?)
-RUN loginctl enable-linger $USERNAME
+RUN apt install --yes git make finger
 RUN finger $USERNAME  # make sure adduser worked correctly
-RUN chown $WORKDIR $USERNAME
+RUN chown $USERNAME $WORKDIR
 RUN ls -ld .  # make sure chown worked
 RUN su - $USERNAME -c "git clone $GITHUB/AmericanCoin.git"
 RUN cd AmericanCoin/src && make -f buster.mk prepare
