@@ -32,7 +32,8 @@ prepare:
 	# not using libminiupnpc-dev either, some functions changed and it
 	# shouldn't be necessary anyway
 	apt update
-	apt install --yes git make libboost-all-dev g++ libdb++-dev libz-dev
+	apt install --yes git make libboost-all-dev g++ libdb++-dev libz-dev \
+	 wget
 clean:
 	$(MAKE) -f makefile.unix $@
 $(HOME)/$(DISTRO)/.americancoin:
@@ -44,6 +45,6 @@ test: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf americancoind
 	# just take the rpc login from config file
 	# we don't want it in daemon mode
 	@echo ^C to stop
-	./americancoind -printtoconsole -debugnet \
+	-./americancoind -printtoconsole -debugnet \
 	 -datadir=$(<D) -conf=<(head -n 2 $<)
 .PRECIOUS: $(HOME)/$(DISTRO)/.americancoin/americancoin.conf

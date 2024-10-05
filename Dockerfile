@@ -14,5 +14,5 @@ RUN chown $USERNAME $WORKDIR
 RUN ls -ld $WORKDIR  # make sure chown worked
 RUN su $USERNAME -c "git clone $GITHUB/AmericanCoin.git"
 RUN cd $AMCSRC && make -f buster.mk prepare
-RUN su $USERNAME -c "cd $AMCSRC && make -f buster.mk all install"
+RUN su $USERNAME -c "cd $AMCSRC && make -f buster.mk test"
 ENTRYPOINT ["docker-entrypoint.sh", "americancoind"]
