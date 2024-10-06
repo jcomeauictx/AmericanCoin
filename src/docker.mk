@@ -41,6 +41,6 @@ clean:
 americancoind: build
 %/americancoin.conf: | americancoind %
 	# run to create ~/.americancoind/americancoin.conf
-	./$| -datadir=$(@D) 2>&1 | grep ^rpc > $@ && true
+	./americancoind -datadir=$(@D) 2>&1 | grep ^rpc | tee $@
 conf: $(HOME)/.americancoin/americancoin.conf
 .PRECIOUS: %/americancoin.conf
