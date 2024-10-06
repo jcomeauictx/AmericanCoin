@@ -6,8 +6,10 @@ PREFIX ?= /usr/local
 USERNAME ?= americancoiner
 # use a version of openssl known to work
 OPENSSL_VERSION := openssl-1.0.2a
-OPENSSL_LIB_PATH := $(PREFIX)/$(OPENSSL_VERSION)/lib
-OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
+OPENSSL_PATH := $(PREFIX)/$(OPENSSL_VERSION)
+OPENSSL_LIB_PATH := $(OPENSSL_PATH)/lib
+OPENSSL_INCLUDE_PATH := $(OPENSSL_PATH))include
+OPENSSL_SRC_PATH ?= ../..
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
 export
@@ -15,14 +17,14 @@ build: $(OPENSSL_INCLUDE_PATH)/openssl
 	type g++ || \
 	 (echo 'Must "sudo make -f $(MAKEFILE) prepare"' first >&2; false)
 	$(MAKE) -f makefile.unix
-$(OPENSSL_INCLUDE_PATH)/openssl: ../../$(OPENSSL_VERSION)
+$(OPENSSL_INCLUDE_PATH)/openssl: $(OPENSSL_SRC_PATH)/$(OPENSSL_VERSION)
 	type gcc || \
 	 (echo 'Must "sudo make -f $(MAKEFILE) prepare"' first >&2; false)
-	cd $< && ./config --prefix=$(dir $(OPENSSL_LIB_PATH))
+	cd $< && ./config --prefix=$(OPENSSL_PATH)
 	cd $< && make install
-../../$(OPENSSL_VERSION): ../../$(OPENSSL_VERSION).tar.gz
+%/$(OPENSSL_VERSION): %/$(OPENSSL_VERSION).tar.gz
 	cd $(@D) && tar xfz $(<F)
-../../$(OPENSSL_VERSION).tar.gz:
+%/$(OPENSSL_VERSION).tar.gz:
 	cd $(@D) && wget http://www.openssl.org/source/$(@F)
 env:
 	$@
@@ -36,6 +38,8 @@ prepare:
 	apt update
 	apt install --yes git make libboost-all-dev g++ libdb++-dev libz-dev \
 	 wget
+	mkdir -p $(OPENSSL_PATH)
+	chown -R $(USERNAME):$(USERNAME) $(OPENSSL_PATH)
 clean:
 	$(MAKE) -f makefile.unix $@
 %/.americancoin:
