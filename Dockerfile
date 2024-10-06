@@ -13,6 +13,8 @@ RUN finger $USERNAME  # make sure adduser worked correctly
 RUN chown $USERNAME $WORKDIR
 RUN ls -ld $WORKDIR  # make sure chown worked
 RUN su $USERNAME -c "git clone $GITHUB/AmericanCoin.git"
-RUN cd $AMCSRC && make -f buster.mk prepare
-RUN su $USERNAME -c "cd $AMCSRC && make -f buster.mk test"
+RUN cd $AMCSRC && make -f docker.mk prepare
+# following must exit successfully or image will not be tagged
+RUN su $USERNAME -c "cd $AMCSRC && make -f docker.mk conf"
+RUN cp src/americancoind /usr/bin
 ENTRYPOINT ["docker-entrypoint.sh", "americancoind"]
