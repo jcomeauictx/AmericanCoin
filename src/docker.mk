@@ -1,10 +1,12 @@
 # some recipes require bashisms
 SHELL=/bin/bash
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
-DISTRO ?= $(MAKEFILE:.mk=)
+PREFIX ?= /usr/local
+# FIXME: Dockerfile should be built from template with values from Makefile
+USERNAME ?= americancoiner
 # use a version of openssl known to work
 OPENSSL_VERSION := openssl-1.0.2a
-OPENSSL_LIB_PATH := $(HOME)/$(OPENSSL_VERSION)/lib
+OPENSSL_LIB_PATH := $(PREFIX)/$(OPENSSL_VERSION)/lib
 OPENSSL_INCLUDE_PATH := $(dir $(OPENSSL_LIB_PATH))include
 USE_UPNP := -
 BOOST_ASIO_ENABLE_OLD_SERVICES := 1
@@ -43,4 +45,6 @@ americancoind: build
 	# run to create ~/.americancoind/americancoin.conf
 	./americancoind -datadir=$(@D) 2>&1 | grep ^rpc | tee $@
 conf: $(HOME)/.americancoin/americancoin.conf
-.PRECIOUS: %/americancoin.conf
+install: americancoind
+	install -o $(USERNAME) $< $(PREFIX)/bin
+.PRECIOUS: %/.americancoin %/americancoin.conf

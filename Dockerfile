@@ -16,5 +16,5 @@ RUN su $USERNAME -c "git clone $GITHUB/AmericanCoin.git"
 RUN cd $AMCSRC && make -f docker.mk prepare
 # following must exit successfully or image will not be tagged
 RUN su $USERNAME -c "cd $AMCSRC && make -f docker.mk conf"
-RUN cp src/americancoind /usr/bin
+RUN cd $AMCSRC && make install
 ENTRYPOINT ["docker-entrypoint.sh", "americancoind"]
