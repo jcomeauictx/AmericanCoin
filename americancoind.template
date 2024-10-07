@@ -1,0 +1,10 @@
+#!/bin/bash
+EXECUTABLE=americancoind
+SOURCE=$HOME/.americancoin
+TARGET=/home/americancoiner/.americancoin
+docker run \
+	--rm \
+	--interactive \
+	--tty \
+	--mount type=bind,source=$SOURCE,target=$TARGET \
+	jcomeauictx/americancoind $*
