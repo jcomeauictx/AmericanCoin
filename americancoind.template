@@ -1,10 +1,19 @@
 #!/bin/bash
+GITTER=jcomeauictx
 EXECUTABLE=americancoind
+TAG=$GITTER/$EXECUTABLE
+NAME=$GITTER-$EXECUTABLE
 SOURCE=$HOME/.americancoin
 TARGET=/home/$USERNAME/.americancoin
-docker run \
-	--rm \
-	--interactive \
-	--tty \
-	--mount type=bind,source=$SOURCE,target=$TARGET \
-	jcomeauictx/americancoind $*
+if [ -z "$*" ]; then
+	docker run \
+		--rm \
+		--detach \
+		--name $NAME \
+		--mount type=bind,source=$SOURCE,target=$TARGET \
+		$TAG
+else
+	docker exec \
+		$NAME \
+		$EXECUTABLE $*
+fi
