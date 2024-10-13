@@ -50,6 +50,5 @@ americancoind: build
 	./americancoind -datadir=$(@D) 2>&1 | grep ^rpc | tee $@
 conf: $(HOME)/.americancoin/americancoin.conf
 install: americancoind
-	# install with suid bit set for running as owner
-	install --owner=$(USERNAME) --mode=4755 $< $(PREFIX)/bin
+	install --mode=755 $< $(PREFIX)/bin
 .PRECIOUS: %/.americancoin %/americancoin.conf

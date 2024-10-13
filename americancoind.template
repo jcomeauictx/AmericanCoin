@@ -1,7 +1,7 @@
 #!/bin/bash
 EXECUTABLE=americancoind
 SOURCE=$HOME/.americancoin
-TARGET=/home/americancoiner/.americancoin
+TARGET=/home/$USERNAME/.americancoin
 docker run \
 	--rm \
 	--interactive \

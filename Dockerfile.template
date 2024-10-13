@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
 FROM debian:buster
-ARG USERNAME=americancoiner
 ARG REALNAME='AmericanCoin Daemon'
 ARG WORKDIR=/usr/src/jcomeauictx
 ARG GITHUB=https://github.com/jcomeauictx
@@ -17,4 +16,7 @@ RUN cd $AMCSRC && make -f docker.mk prepare
 # following must exit successfully or image will not be tagged
 RUN su $USERNAME -c "cd $AMCSRC && make -f docker.mk conf"
 RUN cd $AMCSRC && make -f docker.mk install
+# run americancoind as nonprivileged user
+USER $USERNAME
 ENTRYPOINT ["americancoind"]
+#CMD americancoind  # allow to be overridden for testing with /bin/bash
