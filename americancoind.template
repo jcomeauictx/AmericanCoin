@@ -9,6 +9,8 @@ if [ -z "$*" ]; then
 	docker run \
 		--rm \
 		--detach \
+		--interactive \
+		--tty \
 		--name $NAME \
 		--mount type=bind,source=$SOURCE,target=$TARGET \
 		$TAG
