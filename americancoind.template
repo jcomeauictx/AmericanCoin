@@ -5,7 +5,7 @@ TAG=$GITTER/$EXECUTABLE
 NAME=$GITTER-$EXECUTABLE
 SOURCE=$HOME/.americancoin
 TARGET=/home/$USERNAME/.americancoin
-if [ -z "$*" ]; then
+if [ -z "$*" -o "$*" = "-daemon" ]; then
 	docker run \
 		--rm \
 		--detach \
@@ -13,7 +13,7 @@ if [ -z "$*" ]; then
 		--tty \
 		--name $NAME \
 		--mount type=bind,source=$SOURCE,target=$TARGET \
-		$TAG
+		$TAG -daemon
 else
 	docker exec \
 		$NAME \
