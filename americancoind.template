@@ -2,25 +2,24 @@
 GITTER=jcomeauictx
 EXECUTABLE=americancoind
 TAG=$GITTER/$EXECUTABLE
-NAME=$GITTER-$EXECUTABLE
+CONTAINER=$GITTER-$EXECUTABLE
 SOURCE=$HOME/.americancoin
 TARGET=/home/$USERNAME/.americancoin
-# if no args, assume launching background process
-# (server=1 and daemon=1 may be in $HOME/.americancoin/americancoin.conf)
-if [ -z "$*" ]; then
+# if container isn't running, assume this is to launch one
+if ! docker ps -a --format '{{.Names}}' | grep "^${CONTAINER}$"; then
 	docker run \
 		--rm \
-		--detach \
 		--interactive \
 		--tty \
-		--name $NAME \
+		--name=$CONTAINER \
 		--mount type=bind,source=$SOURCE,target=$TARGET \
-		$TAG
+		$TAG -nodaemon -server -printtoconsole | \
+		tee -a $TARGET/debug.log
 # otherwise we assume the container is already running, and this is a
 # client command like `getbalance`
 else
 	docker exec \
-		--user $USERNAME \
-		$NAME \
+		--user=$USERNAME \
+		$CONTAINER \
 		$EXECUTABLE $*
 fi
