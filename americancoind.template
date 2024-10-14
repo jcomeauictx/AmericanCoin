@@ -5,7 +5,9 @@ TAG=$GITTER/$EXECUTABLE
 NAME=$GITTER-$EXECUTABLE
 SOURCE=$HOME/.americancoin
 TARGET=/home/$USERNAME/.americancoin
-if [ -z "$*" -o "$*" = "-daemon" ]; then
+# if no args, assume launching background process
+# (server=1 and daemon=1 may be in $HOME/.americancoin/americancoin.conf)
+if [ -z "$*" ]; then
 	docker run \
 		--rm \
 		--detach \
@@ -13,9 +15,12 @@ if [ -z "$*" -o "$*" = "-daemon" ]; then
 		--tty \
 		--name $NAME \
 		--mount type=bind,source=$SOURCE,target=$TARGET \
-		$TAG -daemon
+		$TAG
+# otherwise we assume the container is already running, and this is a
+# client command like `getbalance`
 else
 	docker exec \
+		--user $USERNAME \
 		$NAME \
 		$EXECUTABLE $*
 fi
