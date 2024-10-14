@@ -14,7 +14,7 @@ if ! docker ps -a --format '{{.Names}}' | grep "^${CONTAINER}$"; then
 		--name=$CONTAINER \
 		--mount type=bind,source=$SOURCE,target=$TARGET \
 		$TAG -nodaemon -server -printtoconsole | \
-		tee -a $TARGET/debug.log
+		tee -a $SOURCE/debug.log
 # otherwise we assume the container is already running, and this is a
 # client command like `getbalance`
 else
