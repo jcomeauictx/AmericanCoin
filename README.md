@@ -1,3 +1,9 @@
+# Quickstart-Docker
+
+Run AmericanCoin daemon from docker image:
+
+`make docker`
+
 # Quickstart
 
 As root on a new Digital Ocean droplet running Debian 10 (Buster):
