@@ -11,7 +11,7 @@ endif
 all: build
 build: Dockerfile americancoind
 	docker build --tag $(TAG) .
-%: %.template
+%: %.template $(MAKEFILE_LIST)
 	envsubst '$$USERNAME' < $< > $@
 	if [ "$@" = "americancoind" ]; then chmod +x $@; fi
 publish:
