@@ -13,6 +13,7 @@ build: Dockerfile americancoind
 	docker build --tag $(TAG) .
 %: %.template
 	envsubst '$$USERNAME' < $< > $@
+	if [ "$@" = "americancoind" ]; then chmod +x $@; fi
 publish:
 	docker login
 	docker push $(TAG)
