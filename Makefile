@@ -9,6 +9,6 @@ $(HOME)/%:
 	mkdir -p $@
 $(LOGFILE): $(@D)
 	touch $@
-$(CONFIG): americancoind .FORCE
+$(CONFIG): americancoind $(@D) .FORCE
 	if ! grep '^rpc' $@; then ./$< | grep '^rpc' >> $@; fi
 .FORCE:
