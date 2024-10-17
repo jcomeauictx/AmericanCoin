@@ -5,10 +5,11 @@ docker: americancoind $(CONFIG) $(LOGFILE)
 	./$<
 americancoind: americancoind.template docker.mk
 	$(MAKE) -f docker.mk $@
-$(HOME)/%:
+$(CONFDIR):
 	mkdir -p $@
-$(LOGFILE): $(@D)
+$(LOGFILE): $(CONFDIR)
 	touch $@
-$(CONFIG): americancoind $(@D) .FORCE
+$(CONFIG): americancoind $(CONFDIR) .FORCE
+	[ -e "$@" ] || touch $@
 	if ! grep '^rpc' $@; then ./$< | grep '^rpc' >> $@; fi
 .FORCE:
