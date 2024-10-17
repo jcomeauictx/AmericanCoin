@@ -1,8 +1,14 @@
 # Quickstart-Docker
 
-Run AmericanCoin daemon from docker image:
+Run AmericanCoin daemon from docker image on modern Debian system:
 
-`make docker`
+First, as root, make sure you have the necessary packages installed:
+`apt install make git docker.io`, and grant docker access to the unprivileged
+user who will be running the daemon: `usermod -a -G docker jrandomhacker`
+
+Then, as the user: `make docker` should start the daemon up. Leave it open
+in that window, and open another terminal window to run client commands, e.g.:
+`./americancoind getbalance`.
 
 # Quickstart
 
