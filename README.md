@@ -1,4 +1,4 @@
-# Quickstart-Docker
+# Quickstart (new Docker image method)
 
 Run AmericanCoin daemon from docker image on modern Debian system:
 
@@ -10,7 +10,7 @@ Then, as the user: `make docker` should start the daemon up. Leave it open
 in that window, and open another terminal window to run client commands, e.g.:
 `./americancoind getbalance`.
 
-# Quickstart
+# Quickstart (obsolete: Debian 10 no longer avaialable on Digital Ocean)
 
 As root on a new Digital Ocean droplet running Debian 10 (Buster):
 
